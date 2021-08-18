@@ -10,15 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '8.x'
 
-      - name: Set up Python
+      - name: set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '2.7'
+
+      - name: pre-installation
+        run: |
+          if [ ! -d $HOME/google-cloud-sdk/bin ]; then rm -rf $HOME/google-cloud-sdk; curl https://sdk.cloud.google.com | bash > /dev/null; fi
+          source $HOME/google-cloud-sdk/path.bash.inc
+          gcloud components update -q
+          gcloud components install app-engine-python
+          gcloud version
 
       - name: installation
         run: |
@@ -35,23 +43,5 @@ jobs:
       - name: build
         run: npm run build
 
-#python:
-#  - "2.7"
-#env:
-#  global:
-#  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
-#  - CLOUDSDK_PYTHON_SITEPACKAGES=1
-#  - GAE_APP_ID=cr-status
-#before_install:
-#  - if [ ! -d $HOME/google-cloud-sdk/bin ]; then rm -rf $HOME/google-cloud-sdk; curl https://sdk.cloud.google.com | bash > /dev/null; fi
-#  - source $HOME/google-cloud-sdk/path.bash.inc
-#  - gcloud components update -q
-#  - gcloud components install app-engine-python
-#  - gcloud version
-
-#script:
-#  - npm run lint
-#  - npm run test
-#  - npm run build
-#after_success:
-#  - df -h
+      - name: clean up
+        run: df -h
