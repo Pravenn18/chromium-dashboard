@@ -1,3 +1,17 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - main
+      - github-actions # TODO: remove
+jobs:
+  run_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm run lint
+
+: '
 language: node_js
 node_js:
   - "8"
@@ -34,3 +48,4 @@ script:
   - npm run build
 after_success:
   - df -h
+'
