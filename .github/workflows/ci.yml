@@ -5,21 +5,27 @@ on:
       - main
       - github-actions # TODO: remove
 jobs:
-  run_test:
+  node_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm run lint
 
-#flanguage: node_js
-#node_js:
-#  - "8"
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '8.x'
+
+      - name: installation
+        run: |
+          npm install -g gulp
+          npm install
+          npm run ci-dep
+
+      - name: lint
+        run: npm run lint
+
 #python:
 #  - "2.7"
-#dist: trusty
-#sudo: false
-#git:
-#  depth: 1
 #env:
 #  global:
 #  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
@@ -37,10 +43,6 @@ jobs:
 #  - gcloud components install app-engine-python
 #  - gcloud version
 
-#install:
-#  - npm install -g gulp
-#  - npm install
-#  - npm run travis-deps
 #script:
 #  - npm run lint
 #  - npm run test
